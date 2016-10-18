@@ -17,7 +17,7 @@ class MySQL implements Constraint
         $this->conn = $long?mysql_pconnect($host,$user,$password):mysql_connect($host,$user,$password);
 
         if(mysql_error()){
-            throw new Exception('An MySQLi connection error is thrown: '.$this->getError());
+            throw new Exception('An MySQL connection error is thrown: '.$this->getError());
         }
 
         if (mysql_get_server_info() > '4.1') {
@@ -37,7 +37,7 @@ class MySQL implements Constraint
     public function query($sql){
         $this->result = @mysql_query($sql);
         if(!$this->result){
-            throw new Exception('An MySQLi query error is thrown: '.$this->getError());
+            throw new Exception('An MySQL query error is thrown: '.$this->getError());
         }else{
             return $this->result;
         }

@@ -8,6 +8,10 @@ namespace Controllers;
 
 class PingController
 {
+    /*
+     * Wifidog will regularly check authentication server's status by sending a 'ping' request,
+     * and we should reply it by 'Pong'.
+     */
     public static function pong()
     {
         echo 'Pong';
