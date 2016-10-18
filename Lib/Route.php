@@ -10,14 +10,14 @@ class Route
 {
     public static function get($route, $callback) {
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['action'] == $route) {
-            $callback();
+            call_user_func($callback);
             exit;
         }
     }
 
     public static function post($route, $callback) {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_GET['action'] == $route) {
-            $callback();
+            call_user_func($callback);
             exit;
         }
     }
