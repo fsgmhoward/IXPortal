@@ -5,6 +5,7 @@
  */
 
 $config = array(
+    'debug' => true, # This MUST be false when running in production environment
     'db' => array(
         'host' => 'YOUR DB HOST',
         'user' => 'YOUR DB USER',

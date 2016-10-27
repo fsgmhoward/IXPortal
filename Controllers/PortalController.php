@@ -39,7 +39,7 @@ class PortalController
      */
     public static function showLogin()
     {
-        Template::load('login');
+        Template::load('login', array('title' => 'Login'));
     }
 
     /*
@@ -55,6 +55,6 @@ class PortalController
      */
     public static function showPortal()
     {
-        Template::load('portal');
+        Template::load('portal', array('title' => 'Successfully Logged In'));
     }
 }

@@ -5,6 +5,7 @@
  */
 
 use Lib\Route;
+use Lib\Exception as ExceptionHandler;
 
 require 'autoloader.php';
 
@@ -16,7 +17,13 @@ if ($_GET['action'] == 'cron') {
     define('PRIVATE', true);
 }
 
-require 'Include/Guard.php';
+try {
+    require 'Include/Guard.php';
 
-Route::get('ping', 'Controllers\\PingController::pong');
-Route::get('portal', 'Controllers\\PortalController::ShowPortal');
+    Route::get('ping', 'Controllers\\PingController::pong');
+    Route::get('portal', 'Controllers\\PortalController::showPortal');
+    Route::get('login', 'Controllers\\PortalController::showLogin');
+    Route::post('login', 'Controllers\\PortalController::doLogin');
+} catch (Exception $e) {
+    ExceptionHandler::show($e);
+}
