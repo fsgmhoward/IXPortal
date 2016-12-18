@@ -13,7 +13,7 @@ class MySQLi implements Constraint
     private $conn;
     private $result;
 
-    public function __construct($host, $user, $password, $name, $long=false)
+    public function __construct($host, $user, $password, $name, $long = false)
     {
         $hostX = explode(':', $host);
         if ($hostX[0] == $host) {
@@ -30,49 +30,58 @@ class MySQLi implements Constraint
         return $this->conn;
     }
 
-    public function close(){
+    public function close()
+    {
         $this->conn->close();
     }
 
     //Query
-    public function query($query){
+    public function query($query)
+    {
         $this->result = $this->conn->query($query);
-        if(!$this->result){
+        if (!$this->result) {
             throw new Exception('An MySQLi query error is thrown: '.$this->getError());
-        }else{
+        } else {
             return $this->result;
         }
     }
 
-    public function fetch_array($result, $type = MYSQLI_ASSOC) {
+    public function fetch_array($result, $type = MYSQLI_ASSOC)
+    {
         return $result->fetch_array($type);
     }
 
-    public function xQuery($query){
+    public function xQuery($query)
+    {
         $this->result = $this->query($query);
         return $this->fetch_array($this->result);
     }
 
-    public function numRows($result){
+    public function numRows($result)
+    {
         return $result->num_rows;
     }
 
-    public function insertId(){
+    public function insertId()
+    {
         return $this->conn->insert_id;
     }
 
     //Get connection error information
-    private function getConnectError() {
+    private function getConnectError()
+    {
         return '#' . $this->conn->connect_errno . ' - ' . $this->conn->connect_error;
     }
 
     //Get error information
-    private function getError() {
+    private function getError()
+    {
         return '#' . $this->getErrno() . ' - ' . $this->conn->error;
     }
 
     //Get error number
-    private function getErrno() {
+    private function getErrno()
+    {
         return $this->conn->errno;
     }
 }

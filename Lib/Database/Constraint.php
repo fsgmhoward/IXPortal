@@ -16,7 +16,7 @@ interface Constraint
      * @param string $name
      * @param bool $long
      */
-    function __construct($host, $user, $password, $name, $long=false);
+    function __construct($host, $user, $password, $name, $long = false);
 
     /**
      * Close the connection

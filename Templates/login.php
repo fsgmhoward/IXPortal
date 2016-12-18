@@ -20,7 +20,7 @@ require 'header.php';
                 }
                 ?>
                 <div class="panel-body">
-                    <form class="form-horizontal" action="?action=login" method="post">
+                    <form class="form-horizontal" action="?action=login&gw_id={{ $gw_id }}&gw_address={{ $gw_address }}&gw_port={{ $gw_port }}&mac={{ $mac }}&url={{ $url }}" method="post">
                         <div class="form-group">
                             <label for="username" class="control-label col-sm-3">Username</label>
                             <div class="col-sm-9">
