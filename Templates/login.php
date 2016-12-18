@@ -11,6 +11,14 @@ require 'header.php';
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default">
                 <div class="panel-heading"><h4>Login</h4></div>
+                <?php
+                $error = array(
+                    '1' => 'Invalid Username or Password'
+                );
+                if (isset($_GET['error']) && isset($error[$_GET['error']])) {
+                    echo '<p><strong>Error:</strong> '.$error[$_GET['error']].'</p>';
+                }
+                ?>
                 <div class="panel-body">
                     <form class="form-horizontal" action="?action=login" method="post">
                         <div class="form-group">

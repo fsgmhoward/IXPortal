@@ -8,6 +8,8 @@ namespace Controllers;
 
 use Lib\Database;
 use Lib\Template;
+use Lib\Config;
+use Exception;
 
 class PortalController
 {
@@ -47,7 +49,27 @@ class PortalController
      */
     public static function doLogin()
     {
-        // TODO: doLogin method
+        if (!isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['remember'])) {
+            throw new Exception('Invalid Input');
+        } else {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $remember = $_POST['remember'];
+
+            // Hash password
+            $i = explode('a', $username);
+            $hash = md5(md5(
+                $i[0] . Config::get('salt') . $password . (isset($i[1]) ? $i[1] : '')
+            ));
+
+            $db = new Database;
+            $result = $db->query('SELECT * FROM `user` WHERE `username`="'.$username.'" AND `password`="'.$hash.'";');
+            if ($db->numRows($result)) {
+                // TODO: Successfully authenticated
+            } else {
+                header('Location: ?action=login&error=1');
+            }
+        }
     }
 
     /*

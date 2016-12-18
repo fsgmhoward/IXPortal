@@ -40,6 +40,22 @@ class Config
 
     public static function set($name, $value)
     {
-        //todo
+        //todo: to check
+        if (!self::$config) {
+            self::load();
+        }
+        $names = explode('.', $name);
+        $replace = [self::$config];
+        foreach ($names as $name) {
+            $replace[] = $replace[sizeof($replace)-1][$name];
+        }
+        $size = sizeof($replace) - 1;
+        $replace[$size] = $value;
+        $i = $size;
+        foreach ($names as $name) {
+            $replace[$i-1][$name] = $replace[$i];
+            $i--;
+        }
+        self::$config = $replace[0];
     }
 }
