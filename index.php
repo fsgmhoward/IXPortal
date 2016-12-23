@@ -25,6 +25,8 @@ try {
     Route::get('portal', 'Controllers\\PortalController::showPortal');
     Route::get('login', 'Controllers\\PortalController::showLogin');
     Route::post('login', 'Controllers\\PortalController::doLogin');
+    Route::get('register', 'Controllers\\PortalController::showRegister');
+    Route::post('register', 'Controllers\\PortalController::doRegister');
 
     throw new Exception("Route not found");
 } catch (Exception $e) {

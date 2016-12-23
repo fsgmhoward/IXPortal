@@ -10,6 +10,7 @@ use Lib\Database;
 use Lib\Template;
 use Lib\Config;
 use Exception;
+use Lib\Tool;
 
 class PortalController
 {
@@ -68,6 +69,7 @@ class PortalController
                     setcookie('gw_id', $_COOKIE['gw_id'], time() + $remember * 86400);
                     setcookie('remember', $remember, time() + $remember * 86400);
                 }
+                setcookie('url', $array['url']);
                 header("Location: http://{$array['gw_address']}:{$array['gw_port']}/wifidog/auth?token={$_COOKIE['token']}");
             } else {
                 // Remove invalid cookie
@@ -93,11 +95,7 @@ class PortalController
         if (empty($gwAddress) || empty($gwPort) || empty($gwID) || empty($mac) || empty($username) || empty($password)) {
             throw new Exception('Invalid Input');
         } else {
-            // Hash password
-            $i = explode('a', $username);
-            $hash = md5(md5(
-                $i[0] . Config::get('salt') . $password . (isset($i[1]) ? $i[1] : '')
-            ));
+            $hash = Tool::hash($password);
 
             $db = Database::init();
             $result = $db->query("SELECT * FROM `user` WHERE `username`='".$username."' AND `password`='".$hash."';");
@@ -128,6 +126,22 @@ class PortalController
                 header('Location: ?action=login&error=1');
             }
         }
+    }
+
+    /*
+     * Show the register page of the portal
+     */
+    public static function showRegister()
+    {
+        Template::load('register', array('title' => 'Register'));
+    }
+
+    /*
+     * Receive the register form posted by the user
+     */
+    public static function doRegister()
+    {
+
     }
 
     /*

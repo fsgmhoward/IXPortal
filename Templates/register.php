@@ -5,7 +5,9 @@
  */
 
 require 'header.php';
-$open = \Lib\Config::get('open');
+if (!\Lib\Config::get('open')) {
+    throw new Exception('This portal is not opened for register');
+}
 ?>
 
     <div class="row">
@@ -14,14 +16,15 @@ $open = \Lib\Config::get('open');
                 <div class="panel-heading"><h4>Login</h4></div>
                 <?php
                 $error = array(
-                    '1' => 'Invalid Username or Password'
+                    '1' => 'Username Exists',
+                    '2' => 'Password not Match'
                 );
                 if (isset($_GET['error']) && isset($error[$_GET['error']])) {
                     echo '<p><strong>Error:</strong> '.$error[$_GET['error']].'</p>';
                 }
                 ?>
                 <div class="panel-body">
-                    <form class="form-horizontal" action="?action=login&gw_id={{ $gw_id }}&gw_address={{ $gw_address }}&gw_port={{ $gw_port }}&mac={{ $mac }}&url={{ $url }}" method="post">
+                    <form class="form-horizontal" action="?action=register&gw_id={{ $gw_id }}&gw_address={{ $gw_address }}&gw_port={{ $gw_port }}&mac={{ $mac }}&url={{ $url }}" method="post">
                         <div class="form-group">
                             <label for="username" class="control-label col-sm-3">Username</label>
                             <div class="col-sm-9">
@@ -35,26 +38,15 @@ $open = \Lib\Config::get('open');
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="remember" class="control-label col-sm-3">Remember Me</label>
+                            <label for="confirm_password" class="control-label col-sm-3">Confirm Password</label>
                             <div class="col-sm-9">
-                                <select class="form-control" id="remember" name="remember">
-                                    <option value="0" selected>Never</option>
-                                    <option value="1">1 Day</option>
-                                    <option value="7">1 Week</option>
-                                    <option value="30">1 Month</option>
-                                </select>
+                                <input class="form-control" type="password" id="confirm_password" name="confirm_password">
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-<?php echo $open ? '6' : '9'; ?>">
-                                <button class="btn btn-default form-control" type="submit" name="submit">Log Me In!</button>
+                            <div class="col-sm-offset-3 col-sm-9">
+                                <button class="btn btn-default form-control" type="submit" name="submit">Register and Log Me In!</button>
                             </div>
-                            <?php
-                            if ($open) { ?>
-                                <div class="col-sm-3">
-                                    <a href="?action=register&gw_id={{ $gw_id }}&gw_address={{ $gw_address }}&gw_port={{ $gw_port }}&mac={{ $mac }}&url={{ $url }}" class="btn btn-primary form-control">Register</a>
-                                </div>
-                            <?php } ?>
                         </div>
                     </form>
                 </div>

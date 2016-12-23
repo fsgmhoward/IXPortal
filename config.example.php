@@ -5,7 +5,9 @@
  */
 
 $config = array(
-    'debug' => true, # This MUST be false when running in production environment
+    'debug' => false, # this MUST be false when running in production environment
+    'salt' => 'anything', # any random characters
+    'open' => true, # enable (or not) for public registering
     'db' => array(
         'host' => 'YOUR DB HOST',
         'user' => 'YOUR DB USER',
@@ -14,7 +16,7 @@ $config = array(
     ),
     'guard' => array(
         'cron' => true, # enable (or not) cron password
-        'password' => 'IXPortal',
+        'password' => 'IXPortal', # cron script password
         'csrf' => true, # enable (or not) CSRF referer checking
         'domain' => '192.168.1.1' # used for CSRF referer checking
     )
