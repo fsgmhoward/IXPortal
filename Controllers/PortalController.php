@@ -111,7 +111,7 @@ class PortalController
                 }
                 $token=md5($token);
                 // Insert token to the database
-                $result = $db->query("INSERT INTO `session` (`token`, `uid`, `gw_id`, `mac`, `url`) VALUES ('$token', '$uid', '$gwID', '$mac', ".($url ? "'$url'" : "NULL").");");
+                $result = $db->query("INSERT INTO `session` (`token`, `uid`, `gw_id`, `mac`, `url`, `createtime`, `updatetime`) VALUES ('$token', '$uid', '$gwID', '$mac', ".($url ? "'$url'" : "NULL").", '".time()."', '".time()."');");
                 if (!$result) {
                     throw new Exception('Database Query Error');
                 } else {
