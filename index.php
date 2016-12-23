@@ -20,10 +20,13 @@ if ($_GET['action'] == 'cron') {
 try {
     require 'Include/Guard.php';
 
+    Route::get('index', 'Controllers\\HomeContrler::showIndex');
     Route::get('ping', 'Controllers\\PingController::pong');
     Route::get('portal', 'Controllers\\PortalController::showPortal');
     Route::get('login', 'Controllers\\PortalController::showLogin');
     Route::post('login', 'Controllers\\PortalController::doLogin');
+
+    throw new Exception("Route not found");
 } catch (Exception $e) {
     ExceptionHandler::show($e);
 }
