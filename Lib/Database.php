@@ -8,7 +8,7 @@ namespace Lib;
 
 class Database
 {
-    static function init($long = false)
+    public static function init($long = false)
     {
         $config = Config::get('db');
         if (extension_loaded('mysqli')) {

@@ -25,7 +25,7 @@ class PortalController
         if (empty($token) || empty($gw_id)) {
             echo 'Auth: 0';
         } else {
-            $db = new Database;
+            $db = Database::init();
             // Check whether token is valid and still active
             $result = $db->query("SELECT * FROM `session` WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status` IS TRUE;");
             if ($db->numRows($result)) {
@@ -55,7 +55,7 @@ class PortalController
         }
         if (isset($_COOKIE['token']) && isset($_COOKIE['gw_id']) && $_COOKIE['gw_id']  == $array['gw_id']) {
             // Found token in cookie, check its validity
-            $db = new Database;
+            $db = Database::init();
             $result = $db->query("SELECT * FROM `session` WHERE `token`={$_COOKIE['token']} AND `gw_id`={$_COOKIE['gw_id']};");
             if ($result && $db->numRows($result)) {
                 // Cookie validated, Re-activate session
@@ -99,7 +99,7 @@ class PortalController
                 $i[0] . Config::get('salt') . $password . (isset($i[1]) ? $i[1] : '')
             ));
 
-            $db = new Database;
+            $db = Database::init();
             $result = $db->query("SELECT * FROM `user` WHERE `username`='".$username."' AND `password`='".$hash."';");
             if ($result && $db->numRows($result)) {
                 $uid = $db->fetch_array($result);

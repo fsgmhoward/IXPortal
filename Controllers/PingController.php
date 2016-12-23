@@ -17,7 +17,7 @@ class PingController
      */
     public static function pong()
     {
-        $db = new Database;
+        $db = Database::init();
         $db->close();
         // If any exception is thrown above, 'Pong' will not be returned, instead, a error message will be shown.
         echo 'Pong';
