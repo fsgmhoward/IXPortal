@@ -17,7 +17,7 @@ class Exception
             'title' => 'Uncaught Exception Thrown',
             'code' => $e->getCode(),
             'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
+            'trace' => str_replace('#', '<br />#', $e->getTraceAsString())
         ));
     }
 }

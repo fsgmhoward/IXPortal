@@ -14,8 +14,7 @@ require 'header.php';
                 <p><strong>Code:</strong> {{ $code }}</p>
                 <p><strong>Message:</strong> {{ $message }}</p>
                 <?php if (\Lib\Config::get('debug')) { ?>
-                    <p><strong>Trace:</strong></p>
-                    <p>{{ $trace }}</p>
+                    <p><strong>Trace:</strong>{{ $trace }}</p>
                 <?php } ?>
             </div>
         </div>
