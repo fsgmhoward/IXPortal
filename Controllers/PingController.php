@@ -6,6 +6,9 @@
 
 namespace Controllers;
 
+use Exception;
+use Lib\Database;
+
 class PingController
 {
     /*
@@ -14,6 +17,9 @@ class PingController
      */
     public static function pong()
     {
+        $db = new Database;
+        $db->close();
+        // If any exception is thrown above, 'Pong' will not be returned, instead, a error message will be shown.
         echo 'Pong';
     }
 }
