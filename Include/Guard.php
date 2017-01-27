@@ -13,8 +13,7 @@ if (Config::get('guard.cron') && defined('PRIVATE')) {
 }
 
 if (Config::get('guard.csrf')) {
-    // TODO: Consider the situation that referrer include port number (like localhost:9000)
-    if (isset($_SERVER['HTTP_REFERER']) && !preg_match('/https?:\/\/'.Config::get('guard.domain').'\/.*/i', $_SERVER['HTTP_REFERER'])) {
+    if (isset($_SERVER['HTTP_REFERER']) && !preg_match('/https?:\/\/'.Config::get('guard.domain').'(:\d+)?\/.*/i', $_SERVER['HTTP_REFERER'])) {
         throw new Exception('Invalid Referer');
     }
 }
