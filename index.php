@@ -20,7 +20,7 @@ if ($_GET['action'] == 'cron') {
 try {
     require 'Include/Guard.php';
 
-    Route::get('index', 'Controllers\\HomeContrler::showIndex');
+    Route::get('index', 'Controllers\\HomeController::showIndex');
     Route::get('ping', 'Controllers\\PingController::pong');
     Route::get('portal', 'Controllers\\PortalController::showPortal');
     Route::get('login', 'Controllers\\PortalController::showLogin');

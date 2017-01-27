@@ -15,17 +15,37 @@ use Lib\Tool;
 class PortalController
 {
     /*
+     * A standard function for all the methods to get shared parameters (gw_address, gw_id, etc.)
+     */
+    protected static function getParameters()
+    {
+        $array =  array(
+            'gw_address' => isset($_GET["gw_address"]) ? $_GET["gw_address"] : null,
+            'gw_port' => isset($_GET["gw_port"]) ? $_GET["gw_port"] : null,
+            'gw_id' => isset($_GET["gw_id"]) ? $_GET["gw_id"] : null,
+            'mac' => isset($_GET["mac"]) ? $_GET["mac"] : null,
+            'url' => isset($_GET["url"]) ? $_GET["url"] : null
+        );
+        if (empty($array['gw_address']) || empty($array['gw_port']) || empty($array['gw_id']) || empty($array['mac'])) {
+            throw new Exception('Invalid Input');
+        }
+        return $array;
+    }
+
+    /*
      * Wifidog will request the authentication server regularly to check whether the session is still active or not.
      */
     public static function showAuth()
     {
         // Get token and gw_id parameter from the query string
         $token = isset($_GET['token']) ? $_GET['token'] : null;
-        $mac = isset($_GET['mac']) ? $_GET['mac'] : null;
-        $gwID = isset($_GET['gw_id']) ? $_GET['gw_id'] : null;
-        if (empty($token) || empty($gw_id)) {
+        if (empty($token)) {
             echo 'Auth: 0';
         } else {
+            $array = self::getParameters();
+            $mac = $array['mac'];
+            $gwID = $array['gw_id'];
+
             $db = Database::init();
             // Check whether token is valid and still active
             $result = $db->query("SELECT * FROM `session` WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status` IS TRUE;");
@@ -44,13 +64,8 @@ class PortalController
      */
     public static function showLogin()
     {
-        $array = array();
+        $array = self::getParameters();
         $array['title'] = 'Login';
-        $array['gw_address'] = isset($_GET["gw_address"]) ? $_GET["gw_address"] : null;
-        $array['gw_port'] = isset($_GET["gw_port"]) ? $_GET["gw_port"] : null;
-        $array['gw_id'] = isset($_GET["gw_id"]) ? $_GET["gw_id"] : null;
-        $array['mac'] = isset($_GET["mac"]) ? $_GET["mac"] : null;
-        $array['url'] = isset($_GET["url"]) ? $_GET["url"] : null;
         if (empty($array['gw_address']) || empty($array['gw_port']) || empty($array['gw_id']) || empty($array['mac'])) {
             throw new Exception('Invalid Input');
         }
@@ -84,15 +99,16 @@ class PortalController
      */
     public static function doLogin()
     {
-        $gwAddress = isset($_GET["gw_address"]) ? $_GET["gw_address"] : null;
-        $gwPort = isset($_GET["gw_port"]) ? $_GET["gw_port"] : null;
-        $gwID = isset($_GET["gw_id"]) ? $_GET["gw_id"] : null;
-        $mac = isset($_GET["mac"]) ? $_GET["mac"] : null;
-        $url = isset($_GET["url"]) ? $_GET["url"] : null;
+        $array = self::getParameters();
+        $gwAddress = $array['gw_address'];
+        $gwPort = $array["gw_port"];
+        $gwID = $array["gw_id"];
+        $mac = $array["mac"];
+        $url = $array["url"];
         $username = isset($_POST['username']) ? $_POST['username'] : null;
         $password = isset($_POST['password']) ? $_POST['password'] : null;
         $remember = isset($_POST['remember']) ? $_POST['remember'] : null;
-        if (empty($gwAddress) || empty($gwPort) || empty($gwID) || empty($mac) || empty($username) || empty($password)) {
+        if (empty($username) || empty($password)) {
             throw new Exception('Invalid Input');
         } else {
             $hash = Tool::hash($password);
@@ -123,7 +139,7 @@ class PortalController
                     header("Location: http://$gwAddress:$gwPort/wifidog/auth?token=$token");
                 }
             } else {
-                header('Location: ?action=login&error=1');
+                header('Location: '.$_SERVER['HTTP_REFERER'].'&error=1');
             }
         }
     }
@@ -133,7 +149,9 @@ class PortalController
      */
     public static function showRegister()
     {
-        Template::load('register', array('title' => 'Register'));
+        $array = self::getParameters();
+        $array['title'] = 'Register';
+        Template::load('register', $array);
     }
 
     /*
@@ -141,7 +159,15 @@ class PortalController
      */
     public static function doRegister()
     {
-
+        $array = self::getParameters();
+        $username = isset($_POST['username']) ? $_POST['username'] : null;
+        $password = isset($_POST['password']) ? $_POST['password'] : null;
+        $confirmPassword = isset($_POST['$confirm_password']) ? $_POST['$confirm_password'] : null;
+        if (!($username && $password && $confirmPassword)) {
+            throw new Exception('Invalid Input');
+        } else {
+            // todo: do Login
+        }
     }
 
     /*

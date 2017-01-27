@@ -10,6 +10,7 @@ class Tool
 {
     public static function hash($password)
     {
-
+        $salt = Config::get('salt');
+        return md5(md5(sha1($password.$salt).$salt).$salt);
     }
 }
