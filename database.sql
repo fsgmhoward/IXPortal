@@ -11,15 +11,19 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- About the status of the session:
+-- 0 - Logged out by the user him/herself, and this kind of token stored in cookie is invalid for re-login
+-- 1 - Active
+-- 2 - Auto logged out by the cron script
 CREATE TABLE `session` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `token` CHAR(32) NOT NULL,
   `uid` SMALLINT UNSIGNED NOT NULL,
   `gw_id` VARCHAR(255) NOT NULL,
   `mac` CHAR(17) NOT NULL,
-  `url` TEXT NULL DEFAULT NULL,
-  `createtime` SMALLINT UNSIGNED NOT NULL,
-  `updatetime` SMALLINT UNSIGNED NOT NULL,
-  `status` BOOLEAN NOT NULL DEFAULT TRUE,
+  `createtime` INT UNSIGNED NOT NULL,
+  `lastlogintime` INT UNSIGNED NOT NULL,
+  `updatetime` INT UNSIGNED NOT NULL,
+  `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
