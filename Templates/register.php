@@ -14,17 +14,17 @@ if (!\Lib\Config::get('open')) {
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default">
                 <div class="panel-heading"><h4>Login</h4></div>
-                <?php
-                $error = array(
-                    '1' => 'Username Exists',
-                    '2' => 'Password not Match'
-                );
-                if (isset($_GET['error']) && isset($error[$_GET['error']])) {
-                    echo '<p><strong>Error:</strong> '.$error[$_GET['error']].'</p>';
-                }
-                ?>
                 <div class="panel-body">
                     <form class="form-horizontal" action="?action=register&gw_id={{ $gw_id }}&gw_address={{ $gw_address }}&gw_port={{ $gw_port }}&mac={{ $mac }}&url={{ $url }}" method="post">
+                        <?php
+                        $error = array(
+                            '1' => 'Username Exists',
+                            '2' => 'Confirm Password Not Match'
+                        );
+                        if (isset($_GET['error']) && isset($error[$_GET['error']])) {
+                            echo '<div class="alert alert-danger">'.$error[$_GET['error']].'</div>';
+                        }
+                        ?>
                         <div class="form-group">
                             <label for="username" class="control-label col-sm-3">Username</label>
                             <div class="col-sm-9">

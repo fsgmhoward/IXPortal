@@ -15,6 +15,19 @@ use Lib\Tool;
 class PortalController
 {
     /*
+     * Error and info const for login process
+     */
+    const ERROR_INVALID_USERNAME_OR_PASSWORD=1;
+
+    const INFO_SUCCESSFULLY_REGISTER=1;
+
+    /*
+     * Error const for register process
+     */
+    const ERROR_USERNAME_EXISTS=1;
+    const ERROR_CONFIRM_PASSWORD_NOT_MATCH=2;
+
+    /*
      * A standard function for all the methods to get shared parameters (gw_address, gw_id, etc.)
      */
     protected static function getParameters()
@@ -30,6 +43,15 @@ class PortalController
             throw new Exception('Invalid Input');
         }
         return $array;
+    }
+
+    /*
+     * Return to the last page and report an error
+     */
+    protected static function showError($errorCode)
+    {
+        header('Location: '.$_SERVER['HTTP_REFERER'].'&error='.$errorCode);
+        exit;
     }
 
     /*
@@ -51,7 +73,7 @@ class PortalController
             $result = $db->query("SELECT * FROM `session` WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status` IS TRUE;");
             if ($db->numRows($result)) {
                 // Update last checking time
-                $db->query("UPDATE `session` SET `updatetime`=now() WHERE `token`='$token' AND `gw_id`='$gwID';");
+                $db->query("UPDATE `session` SET `updatetime`='".time()."' WHERE `token`='$token' AND `gw_id`='$gwID';");
                 echo "Auth: 1";
             } else {
                 echo "Auth: 0";
@@ -139,7 +161,7 @@ class PortalController
                     header("Location: http://$gwAddress:$gwPort/wifidog/auth?token=$token");
                 }
             } else {
-                header('Location: '.$_SERVER['HTTP_REFERER'].'&error=1');
+                self::showError(self::ERROR_INVALID_USERNAME_OR_PASSWORD);
             }
         }
     }
@@ -162,11 +184,25 @@ class PortalController
         $array = self::getParameters();
         $username = isset($_POST['username']) ? $_POST['username'] : null;
         $password = isset($_POST['password']) ? $_POST['password'] : null;
-        $confirmPassword = isset($_POST['$confirm_password']) ? $_POST['$confirm_password'] : null;
+        $confirmPassword = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : null;
         if (!($username && $password && $confirmPassword)) {
             throw new Exception('Invalid Input');
         } else {
-            // todo: do Login
+            if ($password != $confirmPassword) {
+                self::showError(self::ERROR_CONFIRM_PASSWORD_NOT_MATCH);
+            }
+            $conn = Database::init();
+            $result = $conn->query("SELECT * FROM `user` WHERE `username`='$username';");
+            if ($conn->numRows($result)) {
+                self::showError(self::ERROR_USERNAME_EXISTS);
+            }
+            $hash = Tool::hash($password);
+            $conn->query("INSERT INTO `user` (`username`, `password`) VALUES ('$username', '$hash');");
+            $queryString = '?action=login&info='.self::INFO_SUCCESSFULLY_REGISTER;
+            foreach ($array as $name=>$value) {
+                $queryString .= "&$name=$value";
+            }
+            header('Location: '.$queryString);
         }
     }
 
