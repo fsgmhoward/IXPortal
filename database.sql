@@ -12,9 +12,9 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- About the status of the session:
--- 0 - Logged out by the user him/herself, and this kind of token stored in cookie is invalid for re-login
--- 1 - Active
--- 2 - Auto logged out by the cron script
+-- 0 - Destroyed: Logged out by the user him/herself, and this kind of token stored in cookie is invalid for re-login
+-- 1 - Active : User is still using the network
+-- 2 - Inactive : Auto logged out by the cron script
 CREATE TABLE `session` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `token` CHAR(32) NOT NULL,

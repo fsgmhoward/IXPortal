@@ -19,5 +19,8 @@ $config = array(
         'password' => 'IXPortal', # cron script password
         'csrf' => true, # enable (or not) CSRF referer checking
         'domain' => '192.168.1.1' # used for CSRF referer checking
+    ),
+    'cron' => array(
+        'auto_logout' => 300 # Status of the session will be set to inactive(2) after this number of seconds. Set this to 0 to disable this function.
     )
 );
