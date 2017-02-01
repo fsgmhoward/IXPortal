@@ -12,16 +12,22 @@ $open = \Lib\Config::get('open');
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default">
                 <div class="panel-heading"><h4>Login</h4></div>
-                <?php
-                $error = array(
-                    '1' => 'Invalid Username or Password'
-                );
-                if (isset($_GET['error']) && isset($error[$_GET['error']])) {
-                    echo '<p><strong>Error:</strong> '.$error[$_GET['error']].'</p>';
-                }
-                ?>
                 <div class="panel-body">
                     <form class="form-horizontal" action="?action=login&gw_id={{ $gw_id }}&gw_address={{ $gw_address }}&gw_port={{ $gw_port }}&mac={{ $mac }}&url={{ $url }}" method="post">
+                        <?php
+                        $error = array(
+                            '1' => 'Invalid Username or Password'
+                        );
+                        $info = array(
+                            '1' => 'Successfully Registered'
+                        );
+                        if (isset($_GET['error']) && isset($error[$_GET['error']])) {
+                            echo '<div class="alert alert-danger">'.$error[$_GET['error']].'</div>';
+                        }
+                        if (isset($_GET['info']) && isset($info[$_GET['info']])) {
+                            echo '<div class="alert alert-info">'.$info[$_GET['info']].'</div>';
+                        }
+                        ?>
                         <div class="form-group">
                             <label for="username" class="control-label col-sm-3">Username</label>
                             <div class="col-sm-9">

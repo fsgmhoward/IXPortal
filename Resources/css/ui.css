@@ -14,9 +14,6 @@ body {
 .content {
     margin: 2%;
 }
-p {
-    margin: 0;
-}
 
 /**
  * Sticky footer styles
