@@ -59,21 +59,19 @@ class PortalController
      */
     public static function showAuth()
     {
-        // Get token and gw_id parameter from the query string
+        // Get token,mac and gw_id parameter from the query string
         $token = isset($_GET['token']) ? $_GET['token'] : null;
+        $mac = isset($_GET['mac']) ? $_GET['mac'] : null;
+        $gwID = isset($_GET['gw_id']) ? $_GET['gw_id'] : null;
         if (empty($token)) {
             echo 'Auth: 0';
         } else {
-            $array = self::getParameters();
-            $mac = $array['mac'];
-            $gwID = $array['gw_id'];
-
             $db = Database::init();
             // Check whether token is valid and still active
-            $result = $db->query("SELECT * FROM `session` WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status` IS TRUE;");
+            $result = $db->query("SELECT * FROM `session` WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status`='1';");
             if ($db->numRows($result)) {
                 // Update last checking time
-                $db->query("UPDATE `session` SET `updatetime`='".time()."' WHERE `token`='$token' AND `gw_id`='$gwID';");
+                $db->query("UPDATE `session` SET `updatetime`='".time()."' WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status`='1';");
                 echo "Auth: 1";
             } else {
                 echo "Auth: 0";
