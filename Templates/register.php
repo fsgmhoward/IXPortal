@@ -4,10 +4,10 @@
  * Developed by Howard Liu <howard@ixnet.work>, License under MIT
  */
 
-require 'header.php';
 if (!\Lib\Config::get('open')) {
-    throw new Exception('This portal is not opened for register');
+    throwException('ERR_INVALID_ROUTE');
 }
+require 'header.php';
 ?>
 
     <div class="row">

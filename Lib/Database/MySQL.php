@@ -18,7 +18,7 @@ class MySQL implements Constraint
         $this->conn = $long?mysql_pconnect($host, $user, $password):mysql_connect($host, $user, $password);
 
         if (mysql_error()) {
-            throw new Exception('An MySQL connection error is thrown: '.$this->getError());
+            throwException('ERR_DB_CONN', $this->getError());
         }
 
         if (mysql_get_server_info() > '4.1') {
@@ -26,7 +26,7 @@ class MySQL implements Constraint
         }
 
         if (!mysql_select_db($name, $this->conn)) {
-            throw new Exception('An error incurred when selecting DB');
+            throwException('ERR_DB_SELECT');
         }
         return $this->conn;
     }
@@ -40,15 +40,21 @@ class MySQL implements Constraint
     {
         $this->result = @mysql_query($sql);
         if (!$this->result) {
-            throw new Exception('An MySQL query error is thrown: '.$this->getError());
+            throwException('ERR_DB_QUERY', $this->getError());
         } else {
             return $this->result;
         }
     }
 
-    public function fetch_array($result, $type = MYSQLI_ASSOC)
+    public function fetch_array($result = null, $type = MYSQLI_ASSOC)
     {
-        return mysql_fetch_array($result, $type);
+        return mysql_fetch_array($result ?: $this->result, $type);
+    }
+
+    public function hasResult($query)
+    {
+        $this->result = $this->query($query);
+        return $this->numRows($this->result) ? true : false;
     }
 
     public function xQuery($query)

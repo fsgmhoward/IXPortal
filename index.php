@@ -5,19 +5,14 @@
  */
 
 use Lib\Route;
-use Lib\Exception as ExceptionHandler;
+use Lib\Template;
 
-require 'autoloader.php';
+require 'Include/Exception.php';
 
-if (!isset($_GET['action'])) {
-    $_GET['action'] = 'index';
-}
-
-if ($_GET['action'] == 'cron') {
-    define('PRIVATE', true);
-}
+$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'index';
 
 try {
+    require 'autoloader.php';
     require 'Include/Guard.php';
 
     Route::get('index', 'Controllers\\HomeController::showIndex');
@@ -33,7 +28,16 @@ try {
 
     Route::get('cron', 'Controllers\\CronController::run');
 
-    throw new Exception("Route not found");
+    throwException('ERR_INVALID_ROUTE');
 } catch (Exception $e) {
-    ExceptionHandler::show($e);
+    $traceHTML = '';
+    foreach ($e->getTrace() as $index => $trace) {
+        $traceHTML .= "<br /><strong>#$index</strong> {$trace['function']}() @ {$trace['file']}({$trace['line']})";
+    }
+    Template::load('exception', array(
+        'title' => 'Exception Thrown',
+        'code' => $e->getCode(),
+        'message' => $e->getMessage(),
+        'trace' => $traceHTML
+    ));
 }

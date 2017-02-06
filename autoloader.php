@@ -10,6 +10,6 @@ function __autoload($className)
     if (file_exists($file)) {
         require_once $file;
     } else {
-        throw new Exception('Class File Not Found');
+        throwException('ERR_CLASS_NOT_FOUND');
     }
 }

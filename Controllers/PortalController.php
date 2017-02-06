@@ -8,8 +8,6 @@ namespace Controllers;
 
 use Lib\Database;
 use Lib\Template;
-use Lib\Config;
-use Exception;
 use Lib\Tool;
 
 class PortalController
@@ -40,7 +38,7 @@ class PortalController
             'url' => isset($_GET["url"]) ? $_GET["url"] : null
         );
         if (empty($array['gw_address']) || empty($array['gw_port']) || empty($array['gw_id']) || empty($array['mac'])) {
-            throw new Exception('Invalid Input');
+            throwException('ERR_INVALID_INPUT');
         }
         return $array;
     }
@@ -68,8 +66,7 @@ class PortalController
         } else {
             $db = Database::init();
             // Check whether token is valid and still active
-            $result = $db->query("SELECT * FROM `session` WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status`='1';");
-            if ($db->numRows($result)) {
+            if ($db->hasResult("SELECT * FROM `session` WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status`='1';")) {
                 // Update last checking time
                 $db->query("UPDATE `session` SET `updatetime`='".time()."' WHERE `token`='$token' AND `gw_id`='$gwID' AND `mac`='$mac' AND `status`='1';");
                 echo "Auth: 1";
@@ -87,7 +84,7 @@ class PortalController
         $array = self::getParameters();
         $array['title'] = 'Login';
         if (empty($array['gw_address']) || empty($array['gw_port']) || empty($array['gw_id']) || empty($array['mac'])) {
-            throw new Exception('Invalid Input');
+            throwException('ERR_INVALID_INPUT');
         }
         if (isset($_COOKIE['token']) && isset($_COOKIE['gw_id']) && $_COOKIE['gw_id']  == $array['gw_id']) {
             // Found token in cookie, check its validity
@@ -95,10 +92,7 @@ class PortalController
             $result = $db->query("SELECT * FROM `session` WHERE `token`='{$_COOKIE['token']}' AND `gw_id`='{$_COOKIE['gw_id']}' AND `status`='2';");
             if ($result && $db->numRows($result)) {
                 // Cookie validated, Re-activate session
-                $result = $db->query("UPDATE `session` SET `status`='1', `lastlogintime`='".time()."', `updatetime`='".time()."' WHERE `token`='{$_COOKIE['token']}' AND `gw_id`='{$_COOKIE['gw_id']}';");
-                if (!$result) {
-                    throw new Exception('Database Query Error');
-                }
+                $db->query("UPDATE `session` SET `status`='1', `lastlogintime`='".time()."', `updatetime`='".time()."' WHERE `token`='{$_COOKIE['token']}' AND `gw_id`='{$_COOKIE['gw_id']}';");
                 if ($remember = isset($_COOKIE['remember']) ? $_COOKIE['remember'] : null) {
                     setcookie('token', $_COOKIE['token'], time() + 31536000);
                     setcookie('gw_id', $_COOKIE['gw_id'], time() + $remember * 86400);
@@ -129,7 +123,7 @@ class PortalController
         $password = isset($_POST['password']) ? $_POST['password'] : null;
         $remember = isset($_POST['remember']) ? $_POST['remember'] : null;
         if (empty($username) || empty($password)) {
-            throw new Exception('Invalid Input');
+            throwException('ERR_INVALID_INPUT');
         } else {
             $hash = Tool::hash($password);
 
@@ -145,19 +139,15 @@ class PortalController
                 }
                 $token=md5($token);
                 // Insert token to the database
-                $result = $db->query("INSERT INTO `session` (`token`, `uid`, `gw_id`, `mac`, `createtime`, `lastlogintime`, `updatetime`) VALUES ('$token', '$uid', '$gwID', '$mac', '".time()."', '".time()."', '".time()."');");
-                if (!$result) {
-                    throw new Exception('Database Query Error');
-                } else {
-                    // Set Cookie (token will be stored for 1 yr but it will be cleared when logging out)
-                    setcookie('token', $token, time() + 31536000);
-                    setcookie('gw_id', $gwID, time() + $remember * 86400);
-                    setcookie('remember', $remember, time() + $remember * 86400);
-                    setcookie('username', $username);
-                    setcookie('url', $url);
-                    // Redirect user back to WifiDog
-                    header("Location: http://$gwAddress:$gwPort/wifidog/auth?token=$token");
-                }
+                $db->query("INSERT INTO `session` (`token`, `uid`, `gw_id`, `mac`, `createtime`, `lastlogintime`, `updatetime`) VALUES ('$token', '$uid', '$gwID', '$mac', '".time()."', '".time()."', '".time()."');");
+                // Set Cookie (token will be stored for 1 yr but it will be cleared when logging out)
+                setcookie('token', $token, time() + 31536000);
+                setcookie('gw_id', $gwID, time() + $remember * 86400);
+                setcookie('remember', $remember, time() + $remember * 86400);
+                setcookie('username', $username);
+                setcookie('url', $url);
+                // Redirect user back to WifiDog
+                header("Location: http://$gwAddress:$gwPort/wifidog/auth?token=$token");
             } else {
                 self::showError(self::ERROR_INVALID_USERNAME_OR_PASSWORD);
             }
@@ -184,20 +174,19 @@ class PortalController
         $password = isset($_POST['password']) ? $_POST['password'] : null;
         $confirmPassword = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : null;
         if (!($username && $password && $confirmPassword)) {
-            throw new Exception('Invalid Input');
+            throwException('ERR_INVALID_INPUT');
         } else {
             if ($password != $confirmPassword) {
                 self::showError(self::ERROR_CONFIRM_PASSWORD_NOT_MATCH);
             }
             $conn = Database::init();
-            $result = $conn->query("SELECT * FROM `user` WHERE `username`='$username';");
-            if ($conn->numRows($result)) {
+            if ($conn->hasResult("SELECT * FROM `user` WHERE `username`='$username';")) {
                 self::showError(self::ERROR_USERNAME_EXISTS);
             }
             $hash = Tool::hash($password);
             $conn->query("INSERT INTO `user` (`username`, `password`) VALUES ('$username', '$hash');");
             $queryString = '?action=login&info='.self::INFO_SUCCESSFULLY_REGISTER;
-            foreach ($array as $name=>$value) {
+            foreach ($array as $name => $value) {
                 $queryString .= "&$name=$value";
             }
             header('Location: '.$queryString);
@@ -218,14 +207,13 @@ class PortalController
     public static function showLogout()
     {
         if (!isset($_COOKIE['token'])) {
-            throw new Exception('Token missing in cookie');
+            throwException('ERR_MISSING_TOKEN');
         } else {
             $conn = Database::init();
-            $result = $conn->query("SELECT * FROM `session` WHERE `token`='{$_COOKIE['token']}';");
-            if (!$conn->numRows($result)) {
-                throw new Exception('Invalid token stored in the cookie');
+            if (!$conn->hasResult("SELECT * FROM `session` WHERE `token`='{$_COOKIE['token']}';")) {
+                throwException('ERR_INVALID_TOKEN');
             } else {
-                $data = $conn->fetchArray($result);
+                $data = $conn->fetch_array();
                 $seconds = time()-$data['lastlogintime'];
                 $hours = floor($seconds / 3600);
                 $mins = floor($seconds / 60 % 60);

@@ -6,14 +6,14 @@
 
 use Lib\Config;
 
-if (Config::get('guard.cron') && defined('PRIVATE')) {
+if (Config::get('guard.cron') && $_GET['action'] == 'cron') {
     if ($_GET['password'] != Config::get('guard.password')) {
-        throw new Exception('Permission Denied. Invalid Password');
+        throwException('ERR_INVALID_PASSCODE');
     }
 }
 
 if (Config::get('guard.csrf')) {
     if (isset($_SERVER['HTTP_REFERER']) && !preg_match('/https?:\/\/'.Config::get('guard.domain').'(:\d+)?\/.*/i', $_SERVER['HTTP_REFERER'])) {
-        throw new Exception('Invalid Referer');
+        throwException('ERR_INVALID_REFERRER');
     }
 }

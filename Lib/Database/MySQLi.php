@@ -23,7 +23,7 @@ class MySQLi implements Constraint
         }
 
         if ($this->conn->connect_error) {
-            throw new Exception('An MySQLi connection error is thrown: ' . $this->getConnectError());
+            throwException('ERR_DB_CONN', $this->getConnectError());
         }
 
         $this->conn->set_charset('utf8');
@@ -40,15 +40,21 @@ class MySQLi implements Constraint
     {
         $this->result = $this->conn->query($query);
         if (!$this->result) {
-            throw new Exception('An MySQLi query error is thrown: '.$this->getError());
+            throwException('ERR_DB_QUERY', $this->getError());
         } else {
             return $this->result;
         }
     }
 
-    public function fetch_array($result, $type = MYSQLI_ASSOC)
+    public function fetch_array($result = null, $type = MYSQLI_ASSOC)
     {
-        return $result->fetch_array($type);
+        return ($result ?: $this->result)->fetch_array($type);
+    }
+
+    public function hasResult($query)
+    {
+        $this->result = $this->query($query);
+        return $this->numRows($this->result) ? true : false;
     }
 
     public function xQuery($query)

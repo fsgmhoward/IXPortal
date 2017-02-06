@@ -60,7 +60,7 @@ $open = \Lib\Config::get('open');
                                 <div class="col-sm-3">
                                     <a href="?action=register&gw_id={{ $gw_id }}&gw_address={{ $gw_address }}&gw_port={{ $gw_port }}&mac={{ $mac }}&url={{ $url }}" class="btn btn-primary form-control">Register</a>
                                 </div>
-                            <?php } ?>
+                            <?php                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         } ?>
                         </div>
                     </form>
                 </div>

@@ -29,7 +29,7 @@ class Config
                 if (isset($config[$index])) {
                     $config = $config[$index];
                 } else {
-                    throw new Exception('Invalid Config Index');
+                    throwException('ERR_INVALID_CONFIG_INDEX', $index);
                 }
             }
             return $config;

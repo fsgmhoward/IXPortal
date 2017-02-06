@@ -39,6 +39,13 @@ interface Constraint
     function fetch_array($result, $type = MYSQLI_ASSOC);
 
     /**
+     * Check whether results exist
+     * @param string $query
+     * @return bool
+     */
+    function hasResult($query);
+
+    /**
      * Query and Fetch Array
      * @param string $query
      * @return array
