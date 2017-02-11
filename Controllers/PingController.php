@@ -6,7 +6,6 @@
 
 namespace Controllers;
 
-use Exception;
 use Lib\Database;
 
 class PingController
