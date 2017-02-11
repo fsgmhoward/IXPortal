@@ -17,7 +17,7 @@ require 'header.php';
                     <p><strong>Trace:</strong>{{ $trace }}</p>
                 <?php } ?>
                 <hr size="2px">
-                <p><strong>You may use these information to your contact network administrator for help.</strong></p>
+                <p><strong>You may use these information to contact your network administrator for help.</strong></p>
             </div>
         </div>
     </div>
