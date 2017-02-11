@@ -6,7 +6,7 @@
 
 namespace Lib\Database;
 
-interface Constraint
+interface DatabaseContract
 {
     /**
      * Construction function; long means long connection

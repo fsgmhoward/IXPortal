@@ -9,10 +9,12 @@ return array(
     'salt' => 'anything', # any random characters
     'open' => true, # enable (or not) for public registering
     'db' => array(
+        'driver' => 'mysql', # currently only mysql is supported
         'host' => 'YOUR DB HOST',
         'user' => 'YOUR DB USER',
         'password' => 'YOUR DB PASSWORD',
-        'name' => 'YOUR DB NAME'
+        'name' => 'YOUR DB NAME',
+        'long' => false # whether to enable long connection for DB
     ),
     'guard' => array(
         'cron' => true, # enable (or not) cron password

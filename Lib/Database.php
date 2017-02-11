@@ -8,14 +8,12 @@ namespace Lib;
 
 class Database
 {
-    public static function init($long = false)
+    public static function init()
     {
         $config = Config::get('db');
-        if (extension_loaded('mysqli')) {
-            $class = 'Lib\Database\MySQLi';
-        } else {
-            $class = 'Lib\Database\MySQL';
-        }
-        return new $class($config['host'], $config['user'], $config['password'], $config['name'], $long);
+        $driver = array(
+            'mysql' => extension_loaded('mysqli') ? Database\MysqliDriver::class : Database\MysqlDriver::class
+        )[$config['driver']];
+        return new $driver($config['host'], $config['user'], $config['password'], $config['name'], $config['long']);
     }
 }

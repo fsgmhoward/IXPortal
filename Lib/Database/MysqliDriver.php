@@ -6,9 +6,9 @@
 
 namespace Lib\Database;
 
-use Exception;
+use mysqli;
 
-class MySQLi implements Constraint
+class MysqliDriver implements DatabaseContract
 {
     private $conn;
     private $result;
@@ -17,9 +17,9 @@ class MySQLi implements Constraint
     {
         $hostX = explode(':', $host);
         if ($hostX[0] == $host) {
-            @$this->conn = new \mysqli(($long ? 'p:' : '') . $host, $user, $password, $name);
+            @$this->conn = new mysqli(($long ? 'p:' : '') . $host, $user, $password, $name);
         } else {
-            @$this->conn = new \mysqli(($long ? 'p:' : '') . $hostX[0], $user, $password, $name, $hostX[1]);
+            @$this->conn = new mysqli(($long ? 'p:' : '') . $hostX[0], $user, $password, $name, $hostX[1]);
         }
 
         if ($this->conn->connect_error) {

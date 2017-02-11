@@ -15,20 +15,21 @@ try {
     require 'autoloader.php';
     require 'Include/Guard.php';
 
-    Route::get('index', 'Controllers\\HomeController::showIndex');
-    Route::get('ping', 'Controllers\\PingController::pong');
+    $router = new Route();
+    $router->get('index', 'Controllers\\HomeController::showIndex');
+    $router->get('ping', 'Controllers\\PingController::pong');
 
-    Route::get('auth', 'Controllers\\PortalController::showAuth');
-    Route::get('portal', 'Controllers\\PortalController::showPortal');
-    Route::get('login', 'Controllers\\PortalController::showLogin');
-    Route::post('login', 'Controllers\\PortalController::doLogin');
-    Route::get('register', 'Controllers\\PortalController::showRegister');
-    Route::post('register', 'Controllers\\PortalController::doRegister');
-    Route::get('logout', 'Controllers\\PortalController::showLogout');
+    $router->get('auth', 'Controllers\\PortalController::showAuth');
+    $router->get('portal', 'Controllers\\PortalController::showPortal');
+    $router->get('login', 'Controllers\\PortalController::showLogin');
+    $router->post('login', 'Controllers\\PortalController::doLogin');
+    $router->get('register', 'Controllers\\PortalController::showRegister');
+    $router->post('register', 'Controllers\\PortalController::doRegister');
+    $router->get('logout', 'Controllers\\PortalController::showLogout');
 
-    Route::get('cron', 'Controllers\\CronController::run');
+    $router->get('cron', 'Controllers\\CronController::run');
 
-    throwException('ERR_INVALID_ROUTE');
+    $router->exec();
 } catch (Exception $e) {
     $traceHTML = '';
     foreach ($e->getTrace() as $index => $trace) {

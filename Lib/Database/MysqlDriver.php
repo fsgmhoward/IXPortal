@@ -6,9 +6,7 @@
 
 namespace Lib\Database;
 
-use Exception;
-
-class MySQL implements Constraint
+class MysqlDriver implements DatabaseContract
 {
     private $conn;
     private $result;
