@@ -1,0 +1,7 @@
+# Ignore Intellij Idea Project File
+*.iml
+*.ipr
+*.iws
+
+# Ignore Configuration File
+config.php
