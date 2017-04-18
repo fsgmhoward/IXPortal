@@ -20,4 +20,10 @@ class Template
         }
         echo $view;
     }
+
+    public static function isActive($action, $activeOnly = false) {
+        if ($action == $_GET['action']) {
+            echo $activeOnly ? 'active' : 'class="active"';
+        }
+    }
 }
