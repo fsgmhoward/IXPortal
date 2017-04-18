@@ -15,7 +15,7 @@ class Route
     public function __construct()
     {
         $this->method = strtolower($_SERVER['REQUEST_METHOD']);
-        $this->action = isset($_GET['action']) ? $_GET['action'] : 'index';
+        $this->action = $_GET['action'] = (isset($_GET['action']) && $_GET['action']) ? $_GET['action'] : 'index';
     }
 
     /*

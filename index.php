@@ -9,8 +9,6 @@ use Lib\Template;
 
 require 'Include/Exception.php';
 
-$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'index';
-
 try {
     require 'autoloader.php';
     require 'Include/Guard.php';
