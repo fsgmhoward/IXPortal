@@ -2,6 +2,7 @@
 *.iml
 *.ipr
 *.iws
+vendor/
 
 # Ignore Configuration File
 config.php

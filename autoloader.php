@@ -13,3 +13,8 @@ function __autoload($className)
         throwException('ERR_CLASS_NOT_FOUND');
     }
 }
+
+if (file_exists('vendor') && file_exists('vendor/autoload.php')) {
+    require_once 'vendor/autoload.php';
+    spl_autoload_register('__autoload');
+}
