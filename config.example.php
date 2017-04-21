@@ -8,6 +8,7 @@ return array(
     'debug' => false, # this MUST be false when running in production environment
     'salt' => 'anything', # any random characters
     'open' => true, # enable (or not) for public registering
+    'rewrite' => false, # set to true if request is rewritten (i.e. removed '?action=')
     'db' => array(
         'driver' => 'mysql', # currently only mysql is supported
         'host' => 'YOUR DB HOST',

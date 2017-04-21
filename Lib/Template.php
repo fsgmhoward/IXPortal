@@ -30,4 +30,12 @@ class Template
             echo $activeOnly ? 'active' : 'class="active"';
         }
     }
+
+    public static function rewrite($url) {
+        if (Config::get('rewrite')) {
+            echo '/'.$url;
+        } else {
+            echo '/?action='.str_replace('?', '&', $url);
+        }
+    }
 }
