@@ -13,7 +13,11 @@ class Template
         $version = require __DIR__.'/../Include/Version.php';
         $arguments['version'] = 'V'.$version['main'].'.'.$version['sub'];
         ob_start();
-        require __DIR__.'/../Templates/'.$template.'.php';
+        if (file_exists(__DIR__.'/../Templates/'.$template.'.php')) {
+            include __DIR__.'/../Templates/'.$template.'.php';
+        } else {
+            throwException('ERR_TEMPLATE_NOT_FOUND');
+        }
         $view = ob_get_clean();
         foreach ($arguments as $name => $value) {
             $view = str_ireplace("{{ $$name }}", $value, $view);

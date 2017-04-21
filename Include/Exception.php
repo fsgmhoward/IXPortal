@@ -20,7 +20,8 @@ $exception = array(
     32 => 'ERR_INVALID_REFERRER',
     33 => 'ERR_INVALID_ROUTE',
     34 => 'ERR_CLASS_NOT_FOUND',
-    35 => 'ERR_INVALID_CONFIG_INDEX'
+    35 => 'ERR_INVALID_CONFIG_INDEX',
+    36 => 'ERR_TEMPLATE_NOT_FOUND'
     // Add your exception reference code below
 
 );
