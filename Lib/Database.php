@@ -8,12 +8,17 @@ namespace Lib;
 
 class Database
 {
-    public static function init()
+    public static function init($name = null, $host = null, $user = null, $password = null, $long = null, $driver = null)
     {
         $config = Config::get('db');
+        $host = $host ?: $config['host'];
+        $user = $user ?: $config['user'];
+        $password = $password ?: $config['password'];
+        $name = $name ?: $config['name'];
+        $long = $long !== null ? $long : $config['long'];
         $driver = array(
             'mysql' => extension_loaded('mysqli') ? Database\MysqliDriver::class : Database\MysqlDriver::class
-        )[$config['driver']];
-        return new $driver($config['host'], $config['user'], $config['password'], $config['name'], $config['long']);
+        )[$driver ?: $config['driver']];
+        return new $driver($host, $user, $password, $name, $long);
     }
 }
