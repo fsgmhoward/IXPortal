@@ -38,4 +38,13 @@ class Template
             echo '/?action='.str_replace('?', '&', $url);
         }
     }
+
+    public static function returnMsg($url, $msg, $level = 'info') {
+        if (Config::get('rewrite')) {
+            header('/'.$url.'?'.$level.'='.urlencode($msg));
+        } else {
+            header('/?action='.$url.'&'.$level.'='.urlencode($msg));
+        }
+        exit;
+    }
 }
