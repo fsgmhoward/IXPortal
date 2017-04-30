@@ -25,4 +25,13 @@ class Tool
             'hash' => function_exists('password_hash') ? password_hash($hashString, PASSWORD_BCRYPT) : sha1($hashString)
         );
     }
+
+    public static function getPost($name)
+    {
+        if (isset($_POST[$name])) {
+            return str_ireplace(['\'', '"'], '', $_POST[$name]);
+        } else {
+            return false;
+        }
+    }
 }
