@@ -47,4 +47,12 @@ class Template
         }
         exit;
     }
+
+    public static function printMsg($addClass = '', $levels = ['info', 'success', 'warning', 'danger']) {
+        foreach ($levels as $level) {
+            if (isset($_REQUEST[$level])) {
+                echo '<div class="callout callout-'.$level.' '.$addClass.'"><p>'.$_REQUEST[$level].'</p></div>';
+            }
+        }
+    }
 }
