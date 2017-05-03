@@ -39,15 +39,6 @@ class Template
         }
     }
 
-    public static function returnMsg($url, $msg, $level = 'info') {
-        if (Config::get('rewrite')) {
-            header('Location: /'.$url.'?'.$level.'='.urlencode($msg));
-        } else {
-            header('Location: /?action='.$url.'&'.$level.'='.urlencode($msg));
-        }
-        exit;
-    }
-
     public static function printMsg($addClass = '', $levels = ['info', 'success', 'warning', 'danger']) {
         foreach ($levels as $level) {
             if (isset($_REQUEST[$level])) {

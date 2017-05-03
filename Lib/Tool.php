@@ -26,15 +26,6 @@ class Tool
         );
     }
 
-    public static function getPost($name, $defult = null)
-    {
-        if (isset($_POST[$name])) {
-            return str_ireplace(['\'', '"'], '', $_POST[$name]);
-        } else {
-            return $defult;
-        }
-    }
-
     public static function getIP()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
