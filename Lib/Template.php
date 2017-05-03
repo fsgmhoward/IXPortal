@@ -41,9 +41,9 @@ class Template
 
     public static function returnMsg($url, $msg, $level = 'info') {
         if (Config::get('rewrite')) {
-            header('/'.$url.'?'.$level.'='.urlencode($msg));
+            header('Location: /'.$url.'?'.$level.'='.urlencode($msg));
         } else {
-            header('/?action='.$url.'&'.$level.'='.urlencode($msg));
+            header('Location: /?action='.$url.'&'.$level.'='.urlencode($msg));
         }
         exit;
     }
