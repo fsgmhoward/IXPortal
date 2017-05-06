@@ -26,7 +26,7 @@ class Template
     }
 
     public static function isActive($action, $activeOnly = false) {
-        if (strpos($_GET['action'], $action) === 0) {
+        if (strpos(Route::$currentAction, $action) === 0) {
             echo $activeOnly ? 'active' : 'class="active"';
         }
     }

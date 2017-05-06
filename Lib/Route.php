@@ -16,6 +16,8 @@ class Route
     protected $method;
     protected $action;
 
+    public static $currentAction;
+
     public function __construct()
     {
         $this->method = strtolower($_SERVER['REQUEST_METHOD']);
@@ -29,6 +31,7 @@ class Route
         } else {
             $this->action = 'index';
         }
+        self::$currentAction = $this->action;
     }
 
     /*
