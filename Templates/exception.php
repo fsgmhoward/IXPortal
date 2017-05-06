@@ -15,11 +15,11 @@
     <title>Exception Thrown</title>
 
     <!-- Fonts -->
-    <link href="Resources/fonts/font-awesome/font-awesome.css" rel='stylesheet' type='text/css'>
-    <link href="Resources/fonts/Lato/latofonts.css" rel='stylesheet' type='text/css'>
+    <link href="/Resources/fonts/font-awesome/font-awesome.css" rel='stylesheet' type='text/css'>
+    <link href="/Resources/fonts/Lato/latofonts.css" rel='stylesheet' type='text/css'>
 
     <!-- Styles -->
-    <link href="Resources/css/bootstrap.min.css" rel='stylesheet' type='text/css'>
+    <link href="/Resources/css/bootstrap.min.css" rel='stylesheet' type='text/css'>
     <style>
         /*
      * Some styles brought by make:auth command of Laravel Framework
