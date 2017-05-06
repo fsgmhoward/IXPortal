@@ -4,6 +4,7 @@
  * Developed by Howard Liu <howard@ixnet.work>, License under MIT
  */
 
+use Lib\Config;
 use Lib\Route;
 use Lib\Template;
 
@@ -11,10 +12,15 @@ require 'Include/Exception.php';
 
 try {
     require 'autoloader.php';
-    require 'Include/Guard.php';
 
     $router = new Route();
-    $router->get('cron', 'Controllers\\CronController::run');
+    if (Config::get('guard.cron')) {
+        $router->regMiddleware('cron', 'Controllers\\GuardController::password');
+    }
+    if (Config::get('guard.csrf')) {
+        $router->regMiddleware('all', 'Controllers\\GuardController::csrf');
+    }
+    $router->get('cron', 'Controllers\\CronController::run', 'cron');
 
     // Register your route below
 
