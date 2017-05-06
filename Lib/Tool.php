@@ -27,7 +27,7 @@ class Tool
         }
     }
 
-    public static function hash($password, $randomString = '')
+    public static function passwordHash($password, $randomString = '')
     {
         if (!$randomString) {
             $randomString = self::randomHex();
@@ -35,8 +35,19 @@ class Tool
         $hashString  = $randomString.$password.Config::get('salt');
         return array(
             'randomString' => $randomString,
-            'hash' => function_exists('password_hash') ? password_hash($hashString, PASSWORD_BCRYPT) : sha1($hashString)
+            'hash' => function_exists('password_hash') ? password_hash($hashString, PASSWORD_BCRYPT) : sha1($hashString),
+            'type' => function_exists('password_hash') ? 'internal' : 'sha1'
         );
+    }
+
+    public static function passwordVerify($password, $randomString, $type, $hash)
+    {
+        $hashString  = $randomString.$password.Config::get('salt');
+        if ($type == 'internal') {
+            return password_verify($hashString, $hash);
+        } else {
+            return sha1($password) == $hash;
+        }
     }
 
     public static function getIP()
