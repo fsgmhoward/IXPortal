@@ -17,6 +17,14 @@ return array(
         'name' => 'YOUR DB NAME',
         'long' => false # whether to enable long connection for DB
     ),
+    'mail' => array(
+        'driver' => 'sendgrid',
+        'sendgrid' => array(
+            'key' => 'YOUR SENDGRID API KEY',
+            'from' => 'SENDER ADDRESS',
+            'reply_to' => '' # leave empty to use 'from' as 'reply to' address
+        )
+    ),
     'guard' => array(
         'cron' => false, # enable (or not) cron password
         'password' => 'IXFramework', # cron script password

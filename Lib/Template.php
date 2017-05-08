@@ -8,7 +8,7 @@ namespace Lib;
 
 class Template
 {
-    public static function load($template, $arguments = array())
+    public static function load($template, $arguments = array(), $renderOnly = false)
     {
         $version = require __DIR__.'/../Include/Version.php';
         $arguments['version'] = 'V'.$version['main'].'.'.$version['sub'];
@@ -22,7 +22,11 @@ class Template
         foreach ($arguments as $name => $value) {
             $view = str_ireplace("{{ $$name }}", $value, $view);
         }
-        echo $view;
+        if ($renderOnly) {
+            return $view;
+        } else {
+            echo $view;
+        }
     }
 
     public static function isActive($action, $activeOnly = false) {
