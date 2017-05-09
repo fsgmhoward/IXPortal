@@ -49,4 +49,22 @@ interface MailContract
     public function sendTemplate($to, $subject,
                                  $template, $parameter = array(), $extraContent = null,
                                  $from = null, $replyTo = null);
+
+    /**
+     * Add a user to the subscription list
+     *
+     * @param string $email      Email address of the recipient
+     * @param string $lastName   Last name of the recipient
+     * @param string $firstName  First name of the recipient
+     * @param string|int $listId ID of the subscription list, format depend on the driver
+     */
+    public function subscribe($email, $lastName, $firstName = null, $listId = null);
+
+    /**
+     * Remove a user from the subscription list
+     *
+     * @param string $email      Email address of the recipient
+     * @param string|int $listId ID of the subscription list, format depend on the driver
+     */
+    public function unsubscribe($email, $listId);
 }

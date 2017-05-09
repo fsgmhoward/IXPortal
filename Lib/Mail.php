@@ -13,10 +13,11 @@ class Mail
     public static function init($configArray = null, $driver = null)
     {
         $config = Config::get('mail');
-        $driver = array(
+        $driver = $driver ?: $config['driver'];
+        $driverClass = array(
             'sendgrid' => SendgridDriver::class
-        )[$driver ?: $config['driver']];
+        )[$driver];
         $configArray = $configArray ?: $config[$driver];
-        return new $driver($configArray);
+        return new $driverClass($configArray);
     }
 }

@@ -22,7 +22,8 @@ return array(
         'sendgrid' => array(
             'key' => 'YOUR SENDGRID API KEY',
             'from' => 'SENDER ADDRESS',
-            'reply_to' => '' # leave empty to use 'from' as 'reply to' address
+            'reply_to' => '', # leave empty to use 'from' as 'reply to' address
+            'list_id' => 'YOUR SUBSCRIPTION LIST ID'
         )
     ),
     'guard' => array(

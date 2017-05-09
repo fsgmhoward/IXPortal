@@ -26,6 +26,16 @@ class SendgridDriver implements MailContract
     );
     protected $lastError;
 
+    protected function isSuccess($response)
+    {
+        if (strpos(strval($code = $response->statusCode()), '20') === 0) {
+            return true;
+        } else {
+            $this->lastError = $code;
+            return false;
+        }
+    }
+
     public function __construct($configArray)
     {
         $this->configArray = $configArray;
@@ -65,13 +75,7 @@ class SendgridDriver implements MailContract
             }
         }
         $response = $this->instance->client->mail()->send()->post($mail);
-        if (strpos(strval($response->statusCode()), '20') == 0) {
-            // Successfully sent!
-            return true;
-        } else {
-            $this->lastError = $response->statusCode();
-            return false;
-        }
+        return $this->isSuccess($response);
     }
 
     public function sendTemplate($to, $subject,
@@ -85,5 +89,45 @@ class SendgridDriver implements MailContract
         $content['type'] = 'text/html';
         $content['data'] = Template::load($template, $parameter, true);
         return $this->send($to, $subject, $content, $from, $replyTo);
+    }
+
+    public function subscribe($email, $lastName, $firstName = null, $listId = null)
+    {
+        $newRecipient = array(
+            array(
+                'email' => $email,
+                'last_name' => $lastName
+            )
+        );
+        if ($firstName) {
+            $newRecipient[0]['first_name'] = $firstName;
+        }
+        $listId = $listId ?: $this->configArray['list_id'];
+        $response = $this->instance->client->contactdb()->recipients()->post($newRecipient);
+        if ($this->isSuccess($response)) {
+            $recipientId = json_decode($response->body())->persisted_recipients[0];
+        } else {
+            return false;
+        }
+        $response = $this->instance->client->contactdb()->lists()->_($listId)->recipients()->_($recipientId)->post();
+        return $this->isSuccess($response);
+    }
+
+    public function unsubscribe($email, $listId = null) {
+        $response = $this->instance->client->contactdb()->recipients()->search()->get(null, array("email" => $email));
+        if ($this->isSuccess($response)) {
+            if (($recipients = json_decode($response->body())->recipients)) {
+                $recipientId = $recipients[0]->id;
+            } else {
+                $this->lastError = 404;
+                return false;
+            }
+        } else {
+            return false;
+        }
+        $listId = $listId ?: $this->configArray['list_id'];
+        $response = $this->instance->client->contactdb()->lists()->_($listId)->recipients()->_($recipientId)
+            ->delete(null, array('recipient_id' => $recipientId, 'list_id' => $listId));
+        return $this->isSuccess($response);
     }
 }
