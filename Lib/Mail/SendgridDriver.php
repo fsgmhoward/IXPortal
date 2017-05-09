@@ -57,8 +57,7 @@ class SendgridDriver implements MailContract
         if (is_string($content)) {
             $content = array('type' => 'text/plain', 'data' => $content);
         }
-        $content = new SendGrid\Content($content['type'], $content['data']);
-        $mail = new SendGrid\Mail($from, $subject, $to, $content);
+        $mail = new SendGrid\Mail($from, $subject, $to, new SendGrid\Content($content['type'], $content['data']));
         if ($replyTo || $this->configArray['reply_to']) {
             $mail->setReplyTo(new SendGrid\ReplyTo($replyTo ?: $this->configArray['reply_to']));
         }
