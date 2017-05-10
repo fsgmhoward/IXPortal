@@ -5,6 +5,7 @@
  */
 
 return array(
+    'domain' => 'http://localhost', # no '/' should be at the end
     'debug' => false, # this MUST be false when running in production environment
     'salt' => 'anything', # any random characters
     'open' => true, # enable (or not) for public registering
