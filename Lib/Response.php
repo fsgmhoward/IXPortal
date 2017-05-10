@@ -8,12 +8,9 @@ namespace Lib;
 
 class Response
 {
-    public static function returnMsg($url, $msg, $level = 'info') {
-        if (Config::get('rewrite')) {
-            header('Location: /'.$url.'?'.$level.'='.urlencode($msg));
-        } else {
-            header('Location: /?action='.$url.'&'.$level.'='.urlencode($msg));
-        }
+    public static function returnMsg($url, $msg, $level = 'info', $extraParameter = '', $domain = '') {
+        $location = Template::rewrite($url, $level.'='.urlencode($msg).$extraParameter, $domain, true);
+        header('Location: '.$location);
         exit;
     }
 }

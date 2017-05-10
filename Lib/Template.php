@@ -35,12 +35,15 @@ class Template
         }
     }
 
-    public static function rewrite($url, $extraParameter = '', $domain = '') {
+    public static function rewrite($url, $extraParameter = '', $domain = '', $noEcho = false) {
         $domain = $domain ? $domain.'/' : Config::get('domain').'/';
-        if (Config::get('rewrite')) {
-            echo $domain.$url.($extraParameter ? '?'.$extraParameter : '');
+        $return = Config::get('rewrite') ?
+            $domain.$url.($extraParameter ? '?'.$extraParameter : '') :
+            $domain.'?action='.str_replace('?', '&', $url).($extraParameter ? '&'.$extraParameter : '');
+        if ($noEcho) {
+            return $return;
         } else {
-            echo $domain.'?action='.str_replace('?', '&', $url).($extraParameter ? '&'.$extraParameter : '');
+            echo $return;
         }
     }
 
