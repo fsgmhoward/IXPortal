@@ -10,7 +10,7 @@ class Request
 {
     public static function getPost($name, $default = null)
     {
-        if (isset($_POST[$name]) && $_POST[$name]) {
+        if (isset($_POST[$name]) && $_POST[$name] != '') {
             return str_ireplace(['\'', '"'], '', $_POST[$name]);
         } else {
             return $default;
@@ -19,7 +19,7 @@ class Request
 
     public static function getRequest($name, $default = null)
     {
-        if (isset($_REQUEST[$name]) && $_REQUEST[$name]) {
+        if (isset($_REQUEST[$name]) && $_REQUEST[$name] != '') {
             return str_ireplace(['\'', '"'], '', $_REQUEST[$name]);
         } else {
             return $default;
