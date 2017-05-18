@@ -22,6 +22,7 @@ $exception = array(
     34 => 'ERR_CLASS_NOT_FOUND',
     35 => 'ERR_INVALID_CONFIG_INDEX',
     36 => 'ERR_TEMPLATE_NOT_FOUND',
+    37 => 'ERR_INVALID_CALLBACK',
     // Mail Exception
     41 => 'ERR_MAIL_SEND_FAILURE',
     42 => 'ERR_MAIL_SUBSCRIBE_FAILURE',

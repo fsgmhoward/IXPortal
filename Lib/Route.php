@@ -98,29 +98,38 @@ class Route
             if (strpos($this->action, $prefix[0]) === 0) {
                 // Execute middleware for all request
                 foreach ($this->middleware['all'] as $middleware) {
-                    call_user_func($middleware);
+                    self::call($middleware);
                 }
                 // Execute middleware for grouped request
                 foreach ($this->middleware[$prefix[2]] as $middleware) {
-                    call_user_func($middleware);
+                    self::call($middleware);
                 }
-                call_user_func($prefix[1]);
+                self::call($prefix[1]);
                 return;
             }
         }
         if (isset($this->routes[$this->action])) {
             // Execute middleware for all request
             foreach ($this->middleware['all'] as $middleware) {
-                call_user_func($middleware);
+                self::call($middleware);
             }
             // Execute middleware for grouped request
             foreach ($this->middleware[$this->routes[$this->action][1]] as $middleware) {
-                call_user_func($middleware);
+                self::call($middleware);
             }
             // Execute user function
-            call_user_func($this->routes[$this->action][0]);
+            self::call($this->routes[$this->action][0]);
         } else {
             throwException('ERR_INVALID_ROUTE');
+        }
+    }
+
+    protected static function call($callback)
+    {
+        if (is_callable($callback)) {
+            call_user_func($callback);
+        } else {
+            throwException('ERR_INVALID_CALLBACK');
         }
     }
 }

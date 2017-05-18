@@ -26,6 +26,7 @@ try {
 
     $router->exec();
 } catch (Exception $e) {
+    http_response_code(500);
     $traceHTML = '';
     foreach ($e->getTrace() as $index => $trace) {
         $traceHTML .= "<br /><strong>#$index</strong> {$trace['function']}() @ {$trace['file']}({$trace['line']})";
