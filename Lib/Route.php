@@ -6,15 +6,19 @@
 
 namespace Lib;
 
+use Closure;
+
 class Route
 {
     protected $routes = array();
+    protected $prefix = array();
     protected $middleware = array(
         'all'     => array(),
         'default' => array()
     );
     protected $method;
     protected $action;
+    protected $defaultGroup = 'default';
 
     public static $currentAction;
 
@@ -37,11 +41,41 @@ class Route
     /*
      * Register group middleware (executed before call user function)
      */
-    public function regMiddleware($group, $func) {
+    public function regMiddleware($group, $func)
+    {
         if (!isset($this->middleware[$group])) {
             $this->middleware[$group] = array();
         }
         $this->middleware[$group][] = $func;
+        return $this;
+    }
+
+    /*
+     * Register a prefix
+     */
+    public function regPrefix($method, $prefix, $function, $group = null)
+    {
+        if ($this->method == $method) {
+            $this->prefix[] = array($prefix, $function, $group ?: $this->defaultGroup);
+        }
+        return $this;
+    }
+
+    /*
+     * Register a group of requests
+     */
+    public function group($group, Closure $groupedRoutes, $groupMiddleware = array()) {
+        $this->defaultGroup = $group;
+        $groupedRoutes($this);
+        $this->defaultGroup = 'default';
+        if ($groupMiddleware) {
+            if (isset($this->middleware[$group])) {
+                $this->middleware[$group] = array_merge($this->middleware[$group], $groupMiddleware);
+            } else {
+                $this->middleware[$group] = $groupMiddleware;
+            }
+        }
+        return $this;
     }
 
     /*
@@ -53,12 +87,27 @@ class Route
     public function __call($method, $arguments)
     {
         if ($this->method == $method) {
-            $this->routes[$arguments[0]] = array($arguments[1], isset($arguments[2]) ? $arguments[2] : 'default');
+            $this->routes[$arguments[0]] = array($arguments[1], isset($arguments[2]) ? $arguments[2] : $this->defaultGroup);
         }
+        return $this;
     }
 
     public function exec()
     {
+        foreach ($this->prefix as $prefix) {
+            if (strpos($this->action, $prefix[0]) === 0) {
+                // Execute middleware for all request
+                foreach ($this->middleware['all'] as $middleware) {
+                    call_user_func($middleware);
+                }
+                // Execute middleware for grouped request
+                foreach ($this->middleware[$prefix[2]] as $middleware) {
+                    call_user_func($middleware);
+                }
+                call_user_func($prefix[1]);
+                return;
+            }
+        }
         if (isset($this->routes[$this->action])) {
             // Execute middleware for all request
             foreach ($this->middleware['all'] as $middleware) {
