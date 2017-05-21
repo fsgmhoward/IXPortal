@@ -73,7 +73,7 @@
 </div>
 <footer class="footer">
     <div class="container">
-        <p class="text-muted">Proudly Using IX Framework {{ $version }}</p>
+        <p class="text-muted">{{ $powered_by }}</p>
     </div>
 </footer>
 </body>

@@ -10,8 +10,9 @@ class Template
 {
     public static function load($template, $arguments = array(), $renderOnly = false)
     {
-        $version = require __DIR__.'/../Include/Version.php';
-        $arguments['version'] = 'V'.$version['main'].'.'.$version['sub'];
+        global $kernelName, $kernelVersion, $vendorName, $vendorVersion;
+        $arguments['version'] = 'V'.$kernelVersion;
+        $arguments['powered_by'] = "Powered by $vendorName V$vendorVersion with $kernelName V$kernelVersion";
         ob_start();
         if (file_exists(__DIR__.'/../Templates/'.$template.'.php')) {
             include __DIR__.'/../Templates/'.$template.'.php';

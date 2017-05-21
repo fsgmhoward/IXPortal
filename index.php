@@ -10,6 +10,13 @@ use Lib\Template;
 
 require 'Include/Exception.php';
 
+$versionArray  = require 'Include/Version.php';
+global $kernelName, $kernelVersion, $vendorName, $vendorVersion;
+$kernelName    = $versionArray['kernel_name'];
+$kernelVersion = $versionArray['kernel_version'];
+$vendorName    = $versionArray['vendor_name'];
+$vendorVersion = $versionArray['vendor_version'];
+
 try {
     require 'autoloader.php';
 

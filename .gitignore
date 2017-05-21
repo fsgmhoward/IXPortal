@@ -2,7 +2,17 @@
 *.iml
 *.ipr
 *.iws
+.idea/
+
+# Ignore Composer File
+composer.phar
 vendor/
 
 # Ignore Configuration File
 config.php
+
+# Ignore Playground File
+playground.php
+
+# Ignore Local Test Environment
+test/
