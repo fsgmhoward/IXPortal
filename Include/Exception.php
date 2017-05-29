@@ -23,10 +23,11 @@ $exception = array(
     35 => 'ERR_INVALID_CONFIG_INDEX',
     36 => 'ERR_TEMPLATE_NOT_FOUND',
     37 => 'ERR_INVALID_CALLBACK',
+    38 => 'ERR_METHOD_UNSUPPORTED',
     // Mail Exception
     41 => 'ERR_MAIL_SEND_FAILURE',
     42 => 'ERR_MAIL_SUBSCRIBE_FAILURE',
-    43 => 'ERR_MAIL_UNSUBSCRIBE_FAILURE'
+    43 => 'ERR_MAIL_UNSUBSCRIBE_FAILURE',
     // Add your exception reference code below, code should be above 100
 
 );

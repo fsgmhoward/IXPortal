@@ -10,8 +10,21 @@ use Closure;
 
 class Route
 {
-    protected $routes = array();
-    protected $prefix = array();
+    protected $routes = array(
+        'all' => array(),
+        'get' => array(),
+        'post' => array()
+    );
+    protected $prefix = array(
+        'all' => array(),
+        'get' => array(),
+        'post' => array()
+    );
+    protected $delayedPrefix = array(
+        'all' => array(),
+        'get' => array(),
+        'post' => array()
+    );
     protected $middleware = array(
         'all'     => array(),
         'default' => array()
@@ -24,7 +37,9 @@ class Route
 
     public function __construct()
     {
-        $this->method = strtolower($_SERVER['REQUEST_METHOD']);
+        if (!(($this->method = strtolower($_SERVER['REQUEST_METHOD'])) != 'get' || $this->method != 'post')) {
+            throwException('ERR_METHOD_UNSUPPORTED');
+        }
         $requestURI = strtok($_SERVER['REQUEST_URI'], '?');
         if (isset($_GET['action']) && $_GET['action'] !== '') {
             $this->action = $_GET['action'];
@@ -53,10 +68,12 @@ class Route
     /*
      * Register a prefix
      */
-    public function regPrefix($method, $prefix, $function, $group = null)
+    public function regPrefix($method, $prefix, $function, $group = null, $delay = false)
     {
-        if ($this->method == $method) {
-            $this->prefix[] = array($prefix, $function, $group ?: $this->defaultGroup);
+        if ($delay) {
+            $this->prefix[$method][] = array($prefix, $function, $group ?: $this->defaultGroup);
+        } else {
+            $this->delayedPrefix[$method][] = array($prefix, $function, $group ?: $this->defaultGroup);
         }
         return $this;
     }
@@ -86,42 +103,58 @@ class Route
      */
     public function __call($method, $arguments)
     {
-        if ($this->method == $method) {
-            $this->routes[$arguments[0]] = array($arguments[1], isset($arguments[2]) ? $arguments[2] : $this->defaultGroup);
-        }
+        $this->routes[$method][$arguments[0]] = array($arguments[1], isset($arguments[2]) ? $arguments[2] : $this->defaultGroup);
         return $this;
     }
 
+    /*
+     * Execution Sequence (from specific method to `all`):
+     * - Prefixes
+     * - Specific Routes
+     * - Delayed Prefixes
+     */
     public function exec()
     {
-        foreach ($this->prefix as $prefix) {
+        $prefixes = array_merge($this->prefix[$this->method], $this->prefix['all']);
+        foreach ($prefixes as $prefix) {
             if (strpos($this->action, $prefix[0]) === 0) {
-                // Execute middleware for all request
-                foreach ($this->middleware['all'] as $middleware) {
-                    self::call($middleware);
+                // Execute all executables (`all` first, specific ones later, main function last)
+                $executables = array_merge($this->middleware['all'], $this->middleware[$prefix[2]], array($prefix[1]));
+                foreach ($executables as $executable) {
+                    self::call($executable);
                 }
-                // Execute middleware for grouped request
-                foreach ($this->middleware[$prefix[2]] as $middleware) {
-                    self::call($middleware);
-                }
-                self::call($prefix[1]);
                 return;
             }
         }
-        if (isset($this->routes[$this->action])) {
-            // Execute middleware for all request
-            foreach ($this->middleware['all'] as $middleware) {
-                self::call($middleware);
+        // Specific Method behind `all` ones so it can overwrite if the same key route exists
+        $specificRoutes = array_merge($this->routes['all'], $this->routes[$this->method]);
+        if (isset($specificRoutes[$this->action])) {
+            $executables = array_merge(
+                $this->middleware['all'],
+                $this->middleware[$specificRoutes[$this->action][1]],
+                array($specificRoutes[$this->action][0])
+            );
+            foreach ($executables as $executable) {
+                self::call($executable);
             }
-            // Execute middleware for grouped request
-            foreach ($this->middleware[$this->routes[$this->action][1]] as $middleware) {
-                self::call($middleware);
-            }
-            // Execute user function
-            self::call($this->routes[$this->action][0]);
-        } else {
-            throwException('ERR_INVALID_ROUTE');
+            return;
         }
+        $delayedPrefixes = array_merge($this->delayedPrefix[$this->method], $this->delayedPrefix['all']);
+        foreach ($delayedPrefixes as $delayedPrefix) {
+            if (strpos($this->action, $delayedPrefix[0]) === 0) {
+                // Execute all executables (`all` first, specific ones later, main function last)
+                $executables = array_merge(
+                    $this->middleware['all'],
+                    $this->middleware[$delayedPrefix[2]],
+                    array($delayedPrefix[1])
+                );
+                foreach ($executables as $executable) {
+                    self::call($executable);
+                }
+                return;
+            }
+        }
+        throwException('ERR_INVALID_ROUTE');
     }
 
     protected static function call($callback)
