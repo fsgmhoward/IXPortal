@@ -12,7 +12,7 @@ class GuardController
 {
     public static function password()
     {
-        if ($_GET['password'] != Config::get('guard.password')) {
+        if (!isset($_GET['password']) || $_GET['password'] != Config::get('guard.password')) {
             throwException('ERR_INVALID_PASSCODE');
         }
     }

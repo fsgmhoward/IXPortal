@@ -36,7 +36,16 @@ try {
     http_response_code(500);
     $traceHTML = '';
     foreach ($e->getTrace() as $index => $trace) {
-        $traceHTML .= "<br /><strong>#$index</strong> {$trace['function']}() @ {$trace['file']}({$trace['line']})";
+        $args = '';
+        foreach ($trace['args'] as $arg) {
+            $args = ','.$arg;
+        }
+        $args = ltrim($args, ',');
+        if (isset($trace['file'])) {
+            $traceHTML .= "<br /><strong>#$index {$trace['function']}(</strong>$args<strong>)</strong> @ {$trace['file']}({$trace['line']})";
+        } else {
+            $traceHTML .= "<br /><strong>#$index {$trace['function']}(</strong>$args<strong>)</strong> @ call_user_func()";
+        }
     }
     Template::load('exception', array(
         'code' => $e->getCode(),

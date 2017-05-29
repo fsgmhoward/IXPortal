@@ -3,6 +3,8 @@
  * IX Framework - A Simple MVC Framework
  * Developed by Howard Liu <howard@ixnet.work>, License under MIT
  */
+
+use Lib\Config;
 ?>
 
 <!DOCTYPE html>
@@ -53,16 +55,21 @@
     </style>
 </head>
 <body id="app-layout">
-<div class="container" style="padding-top: 200px; padding-bottom: 50px;">
+<div class="container" style="padding-top: 50px; padding-bottom: 50px;">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading"><h4>Exception Thrown</h4></div>
                 <div class="panel-body">
-                    <p><strong>Code:</strong>{{ $code }}</p>
-                    <p><strong>Name:</strong>{{ $message }}</p>
-                    <?php if (\Lib\Config::get('debug')) { ?>
+                    <p><strong>Code: </strong>{{ $code }}</p>
+                    <p><strong>Name: </strong>{{ $message }}</p>
+                    <?php if (($config = Config::get())['debug']) { ?>
+                        <hr size="2px">
                         <p><strong>Trace:</strong>{{ $trace }}</p>
+                        <p>
+                            <strong>Current Configuration:</strong><br/>
+                            <?php var_dump($config); ?>
+                        </p>
                     <?php } ?>
                     <hr size="2px">
                     <p><strong>You may use these information to contact your network administrator for help.</strong></p>
