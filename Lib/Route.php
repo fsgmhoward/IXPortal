@@ -25,6 +25,7 @@ class Route
         'get' => array(),
         'post' => array()
     );
+    protected $defaultRoute = null;
     protected $middleware = array(
         'all'     => array(),
         'default' => array()
@@ -76,6 +77,13 @@ class Route
             $this->delayedPrefix[$method][] = array($prefix, $function, $group ?: $this->defaultGroup);
         }
         return $this;
+    }
+
+    /*
+     * Register a default route
+     */
+    public function regDefaultRoute($function) {
+        $this->defaultRoute = $function;
     }
 
     /*
@@ -154,7 +162,14 @@ class Route
                 return;
             }
         }
-        throwException('ERR_INVALID_ROUTE');
+        if ($this->defaultRoute) {
+            $executables = array_merge($this->middleware['all'], $this->middleware['default'], array($this->defaultRoute));
+            foreach ($executables as $executable) {
+                self::call($executable);
+            }
+        } else {
+            throwException('ERR_INVALID_ROUTE');
+        }
     }
 
     protected static function call($callback)
