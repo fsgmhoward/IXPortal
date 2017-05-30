@@ -16,7 +16,7 @@ class Tool
         if (function_exists('random_bytes')) {
             return bin2hex(random_bytes($length));
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
-            return openssl_random_pseudo_bytes($length);
+            return bin2hex(openssl_random_pseudo_bytes($length));
         } else {
             if ($length > 16) {
                 $randomHex = self::randomHex($length-16);
