@@ -16,9 +16,15 @@ class Database
         $password = $password ?: $config['password'];
         $name = $name ?: $config['name'];
         $long = $long !== null ? $long : $config['long'];
-        $driver = array(
-            'mysql' => extension_loaded('mysqli') ? Database\MysqliDriver::class : Database\MysqlDriver::class
-        )[$driver ?: $config['driver']];
-        return new $driver($host, $user, $password, $name, $long);
+        switch ($driver ?: $config['driver']) {
+            case 'mysql':
+                if (extension_loaded('mysqli')) {
+                    return new Database\MysqliDriver($host, $user, $password, $name, $long);
+                } else {
+                    return new Database\MysqlDriver($host, $user, $password, $name, $long);
+                }
+            default:
+                throwException('ERR_CLASS_NOT_FOUND');
+        }
     }
 }

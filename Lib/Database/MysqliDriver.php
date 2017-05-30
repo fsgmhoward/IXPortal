@@ -48,7 +48,8 @@ class MysqliDriver implements DatabaseContract
 
     public function fetch_array($result = null, $type = MYSQLI_ASSOC)
     {
-        return ($result ?: $this->result)->fetch_array($type);
+        $result = $result ?: $this->result;
+        return $result->fetch_array($type);
     }
 
     public function hasResult($query)

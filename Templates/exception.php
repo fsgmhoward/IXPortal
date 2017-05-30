@@ -63,7 +63,7 @@ use Lib\Config;
                 <div class="panel-body">
                     <p><strong>Code: </strong>{{ $code }}</p>
                     <p><strong>Name: </strong>{{ $message }}</p>
-                    <?php if (($config = Config::get())['debug']) { ?>
+                    <?php if (($config = Config::get()) && $config['debug']) { ?>
                         <hr size="2px">
                         <p><strong>Trace:</strong>{{ $trace }}</p>
                         <p>
