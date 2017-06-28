@@ -9,7 +9,8 @@
 
 <footer class="footer">
     <div class="container">
-        <p class="text-muted">Proudly Using IX Wireless Portal</p>
+        <p class="text-muted pull-left">Proudly Using IX Wireless Portal.</p>
+        <p class="text-muted pull-right">{{ $powered_by }}</p>
     </div>
 </footer>
 
