@@ -1,6 +1,6 @@
 <?php
 /*
- * IX Portal - Router Wifidog Portal used for authenticating users
+ * IX Framework - A Simple MVC Framework
  * Developed by Howard Liu <howard@ixnet.work>, License under MIT
  */
 

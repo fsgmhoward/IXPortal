@@ -1,6 +1,6 @@
 <?php
 /*
- * IX Portal - Router Wifidog Portal used for authenticating users
+ * IX Framework - A Simple MVC Framework
  * Developed by Howard Liu <howard@ixnet.work>, License under MIT
  */
 
@@ -12,4 +12,9 @@ function __autoload($className)
     } else {
         throwException('ERR_CLASS_NOT_FOUND');
     }
+}
+
+if (file_exists('vendor') && file_exists('vendor/autoload.php')) {
+    require_once 'vendor/autoload.php';
+    spl_autoload_register('__autoload');
 }

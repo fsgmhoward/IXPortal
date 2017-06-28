@@ -1,6 +1,6 @@
 <?php
 /*
- * IX Portal - Router Wifidog Portal used for authenticating users
+ * IX Framework - A Simple MVC Framework
  * Developed by Howard Liu <howard@ixnet.work>, License under MIT
  */
 
@@ -8,12 +8,23 @@ namespace Lib;
 
 class Database
 {
-    public static function init()
+    public static function init($name = null, $host = null, $user = null, $password = null, $long = null, $driver = null)
     {
         $config = Config::get('db');
-        $driver = array(
-            'mysql' => extension_loaded('mysqli') ? Database\MysqliDriver::class : Database\MysqlDriver::class
-        )[$config['driver']];
-        return new $driver($config['host'], $config['user'], $config['password'], $config['name'], $config['long']);
+        $host = $host ?: $config['host'];
+        $user = $user ?: $config['user'];
+        $password = $password ?: $config['password'];
+        $name = $name ?: $config['name'];
+        $long = $long !== null ? $long : $config['long'];
+        switch ($driver ?: $config['driver']) {
+            case 'mysql':
+                if (extension_loaded('mysqli')) {
+                    return new Database\MysqliDriver($host, $user, $password, $name, $long);
+                } else {
+                    return new Database\MysqlDriver($host, $user, $password, $name, $long);
+                }
+            default:
+                throwException('ERR_CLASS_NOT_FOUND');
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /*
- * IX Portal - Router Wifidog Portal used for authenticating users
+ * IX Framework - A Simple MVC Framework
  * Developed by Howard Liu <howard@ixnet.work>, License under MIT
  */
 
@@ -8,14 +8,51 @@ namespace Lib;
 
 class Template
 {
-    public static function load($template, $argv = array())
+    public static function load($template, $arguments = array(), $renderOnly = false)
     {
+        global $kernelName, $kernelVersion, $vendorName, $vendorVersion;
+        $arguments['version'] = 'V'.$kernelVersion;
+        $arguments['powered_by'] = "Powered by $vendorName V$vendorVersion with $kernelName V$kernelVersion";
         ob_start();
-        require __DIR__.'/../Templates/'.$template.'.php';
+        if (file_exists(__DIR__.'/../Templates/'.$template.'.php')) {
+            include __DIR__.'/../Templates/'.$template.'.php';
+        } else {
+            throwException('ERR_TEMPLATE_NOT_FOUND');
+        }
         $view = ob_get_clean();
-        foreach ($argv as $name => $value) {
+        foreach ($arguments as $name => $value) {
             $view = str_ireplace("{{ $$name }}", $value, $view);
         }
-        echo $view;
+        if ($renderOnly) {
+            return $view;
+        } else {
+            echo $view;
+        }
+    }
+
+    public static function isActive($action, $activeOnly = false) {
+        if (strpos(Route::$currentAction, $action) === 0) {
+            echo $activeOnly ? 'active' : 'class="active"';
+        }
+    }
+
+    public static function rewrite($url, $extraParameter = '', $domain = '', $noEcho = false) {
+        $domain = $domain ? $domain.'/' : Config::get('domain').'/';
+        $return = Config::get('rewrite') ?
+            $domain.$url.($extraParameter ? '?'.$extraParameter : '') :
+            $domain.'?action='.str_replace('?', '&', $url).($extraParameter ? '&'.$extraParameter : '');
+        if ($noEcho) {
+            return $return;
+        } else {
+            echo $return;
+        }
+    }
+
+    public static function printMsg($addClass = '', $levels = ['info', 'success', 'warning', 'danger']) {
+        foreach ($levels as $level) {
+            if (isset($_REQUEST[$level])) {
+                echo '<div class="callout callout-'.$level.' '.$addClass.'"><p>'.$_REQUEST[$level].'</p></div>';
+            }
+        }
     }
 }

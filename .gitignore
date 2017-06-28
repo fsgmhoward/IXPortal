@@ -1,2 +1,18 @@
+# Ignore Intellij Idea Project File
+*.iml
+*.ipr
+*.iws
 .idea/
-/config.php
+
+# Ignore Composer File
+composer.phar
+vendor/
+
+# Ignore Configuration File
+config.php
+
+# Ignore Playground File
+playground.php
+
+# Ignore Local Test Environment
+test/
